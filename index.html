@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆皂极登峰，井上添花🌸</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+    </script>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --success: #0d904f;
+            --danger: #d93025;
+            --bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --border: #e0e0e0;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.2s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .app-header {
+            background: var(--card-bg);
+            padding: 0 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 56px;
+            
+        }
+        .app-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            
+        }
+        .app-logo .icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            position: relative;
+        }
+        .nav-tab:hover {
+            background: #f0f4ff;
+            color: var(--primary);
+        }
+        .nav-tab.active {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+        }
+        .nav-tab .badge {
+            display: inline-block;
+            background: var(--danger);
+            color: #fff;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            margin-left: 4px;
+        }
+        .nav-tab.active .badge {
+            background: #fff;
+            color: var(--danger);
+        }
+        .app-main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 24px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            border-radius: 18px;
+        }
+        .btn-lg {
+            padding: 14px 32px;
+            font-size: 1rem;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 32px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #fafbfc;
+        }
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: #f8faff;
+        }
+        .upload-zone input {
+            display: none;
+        }
+        .question-number {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+        .question-text {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            line-height: 1.7;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .option-item {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fafbfc;
+        }
+        .option-item:hover {
+            border-color: var(--primary);
+            background: #f5f8ff;
+        }
+        .option-item.selected {
+            border-color: var(--primary);
+            background: #e8f0fe;
+            font-weight: 600;
+        }
+        .option-item.correct {
+            border-color: var(--success);
+            background: #e6f4ea;
+            color: var(--success);
+        }
+        .option-item.wrong {
+            border-color: var(--danger);
+            background: #fce8e6;
+            color: var(--danger);
+        }
+        .option-item.show-correct {
+            border-color: var(--success);
+            background: #e6f4ea;
+            color: var(--success);
+        }
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e8eaf0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .option-item.selected .option-letter {
+            background: var(--primary);
+            color: #fff;
+        }
+        .option-item.correct .option-letter {
+            background: var(--success);
+            color: #fff;
+        }
+        .option-item.wrong .option-letter {
+            background: var(--danger);
+            color: #fff;
+        }
+        .option-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #bbb;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .option-item.selected .option-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .option-item.selected .option-checkbox::after {
+            content: '✓';
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .feedback-bar {
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            margin-top: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .feedback-bar.correct-fb {
+            background: #e6f4ea;
+            color: var(--success);
+        }
+        .feedback-bar.wrong-fb {
+            background: #fce8e6;
+            color: var(--danger);
+        }
+        .progress-bar {
+            height: 6px;
+            background: #e8eaf0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            border-color: var(--primary);
+            background: #f8faff;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .type-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .type-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            font-size: 0.85rem;
+            background: #fff;
+            transition: var(--transition);
+        }
+        .type-tab.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .wrong-list-item {
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tag-single {
+            background: #e8f0fe;
+            color: #1a73e8;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .tag-multi {
+            background: #fef7e0;
+            color: #e37400;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .tag-judge {
+            background: #e6f4ea;
+            color: #0d904f;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 24px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-close {
+            float: right;
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+        .result-score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-muted {
+            color: var(--text-secondary);
+        }
+        .text-sm {
+            font-size: 0.85rem;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+        .fw-600 {
+            font-weight: 600;
+        }
+        .history-item {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: #fafafa;
+        }
+        .history-item:hover {
+            background: #f0f4ff;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header" id="appHeader">
+        <div class="app-logo"><span class="icon">💯</span> 题库练习</div>
+        <nav class="nav-tabs" id="navTabs">
+            <button class="nav-tab active" data-tab="upload">📁 上传题库</button>
+            <button class="nav-tab" data-tab="practice">📝 题库练习</button>
+            <button class="nav-tab" data-tab="test">🎯 随机测试</button>
+            <button class="nav-tab" data-tab="wrong">📋 错题集<span class="badge hidden" id="wrongBadge">0</span></button>
+        </nav>
+    </header>
+    <main class="app-main" id="appMain"></main>
+    <div id="modalContainer"></div>
+    <script>
+        (function() {
+            const STORAGE_KEY_BANK = 'metro_exam_question_bank_v2';
+            const STORAGE_KEY_WRONG = 'metro_exam_wrong_questions_v2';
+            const STORAGE_KEY_PRACTICE_INDEX = 'metro_practice_index_v2';
+            const STORAGE_KEY_TEST_HISTORY = 'metro_test_history_v2';
+            const TEST_SINGLE = 40,
+                TEST_MULTI = 20,
+                TEST_JUDGE = 30;
+
+            let questionBank = null;
+            let wrongSet = {};
+            let practiceIndex = { single: 0, multi: 0, judge: 0 }; // 题型进度计数器
+            let currentTab = 'upload';
+            let practiceState = null; // 仅当前练习会话有效
+            let testState = null;
+
+            const appMain = document.getElementById('appMain');
+            const wrongBadge = document.getElementById('wrongBadge');
+            const modalContainer = document.getElementById('modalContainer');
+
+            function init() {
+                loadData();
+                updateWrongBadge();
+                renderCurrentTab();
+                bindNav();
+            }
+
+            function loadData() {
+                try {
+                    const bank = localStorage.getItem(STORAGE_KEY_BANK);
+                    if (bank) questionBank = JSON.parse(bank);
+                    const wrong = localStorage.getItem(STORAGE_KEY_WRONG);
+                    wrongSet = wrong ? JSON.parse(wrong) : {};
+                    const idx = localStorage.getItem(STORAGE_KEY_PRACTICE_INDEX);
+                    if (idx) practiceIndex = JSON.parse(idx);
+                } catch (e) {
+                    questionBank = null;
+                    wrongSet = {};
+                    practiceIndex = { single: 0, multi: 0, judge: 0 };
+                }
+            }
+
+            function saveWrong() {
+                try { localStorage.setItem(STORAGE_KEY_WRONG, JSON.stringify(wrongSet)); } catch (e) {}
+                updateWrongBadge();
+            }
+
+            function savePracticeIndex() {
+                try { localStorage.setItem(STORAGE_KEY_PRACTICE_INDEX, JSON.stringify(practiceIndex)); } catch (e) {}
+            }
+
+            function updateWrongBadge() {
+                const c = Object.keys(wrongSet).length;
+                if (c) wrongBadge.classList.remove('hidden'), wrongBadge.textContent = c;
+                else wrongBadge.classList.add('hidden');
+            }
+
+            function bindNav() {
+                document.getElementById('navTabs').addEventListener('click', e => {
+                    const tab = e.target.closest('.nav-tab');
+                    if (!tab) return;
+                    switchTab(tab.dataset.tab);
+                });
+            }
+
+            function switchTab(tab) {
+                currentTab = tab;
+                if (tab !== 'practice') practiceState = null;
+                if (tab !== 'test') testState = null;
+                document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+                const active = document.querySelector(`.nav-tab[data-tab="${tab}"]`);
+                if (active) active.classList.add('active');
+                renderCurrentTab();
+            }
+
+            function renderCurrentTab() {
+                switch (currentTab) {
+                    case 'upload':
+                        renderUpload();
+                        break;
+                    case 'practice':
+                        renderPractice();
+                        break;
+                    case 'test':
+                        renderTest();
+                        break;
+                    case 'wrong':
+                        renderWrong();
+                        break;
+                }
+            }
+
+            function showToast(msg, d = 2000) {
+                const t = document.createElement('div');
+                t.style.cssText =
+                    'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:999;background:#333;color:#fff;padding:10px 24px;border-radius:24px;font-size:0.9rem;font-weight:600;';
+                t.textContent = msg;
+                document.body.appendChild(t);
+                setTimeout(() => { t.style.opacity = '0';
+                    t.style.transition = 'opacity 0.3s';
+                    setTimeout(() => t.remove(), 300); }, d);
+            }
+
+            function normAns(a, type) {
+                if (!a) return '';
+                let s = String(a).trim().replace(/[\|\n\r\s\t]/g, '').toUpperCase();
+                if (type === 'judge') {
+                    if (s.includes('√') || s.includes('对') || s === 'TRUE') return '√';
+                    if (s.includes('×') || s.includes('错') || s === 'FALSE') return '×';
+                    return s;
+                }
+                s = s.replace(/[^A-E]/g, '');
+                if (type === 'multi') s = s.split('').sort().join('');
+                return s;
+            }
+
+            function parseBank(wb) {
+                const bank = { single: [], multi: [], judge: [] };
+                ['单选', '多选', '判断'].forEach(sheetName => {
+                    if (!wb.SheetNames.includes(sheetName)) return;
+                    const data = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, defval: '' });
+                    for (let i = 2; i < data.length; i++) {
+                        const row = data[i];
+                        if (!row || !row[1] || !String(row[1]).trim()) continue;
+                        let q = {
+                            index: parseInt(row[0]) || 0,
+                            question: String(row[1]).trim(),
+                            type: sheetName === '单选' ? 'single' : sheetName === '多选' ? 'multi' : 'judge',
+                        };
+                        if (q.type === 'judge') {
+                            q.answer = normAns(String(row[2] || ''), 'judge');
+                            q.options = { '√': '正确', '×': '错误' };
+                        } else if (q.type === 'multi') {
+                            q.options = { A: String(row[2] || '').trim(), B: String(row[3] || '').trim(), C: String(
+                                    row[4] || '').trim(), D: String(row[5] || '').trim(), E: String(row[6] || '')
+                                    .trim() };
+                            q.answer = normAns(String(row[7] || ''), 'multi');
+                        } else {
+                            q.options = { A: String(row[2] || '').trim(), B: String(row[3] || '').trim(), C: String(
+                                    row[4] || '').trim(), D: String(row[5] || '').trim() };
+                            q.answer = normAns(String(row[6] || ''), 'single');
+                        }
+                        const vo = {};
+                        for (const [k, v] of Object.entries(q.options)) { if (v) vo[k] = v; }
+                        q.options = vo;
+                        if (q.answer && q.question) bank[q.type === 'single' ? 'single' : q.type === 'multi' ? 'multi' :
+                            'judge'].push(q);
+                    }
+                });
+                return bank;
+            }
+
+            function shuffle(a) { const arr = [...a]; for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math
+                        .random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+
+            function getKey(type, idx) { return `${type}_${idx}`; }
+
+            function addWrong(q) {
+                const k = getKey(q.type, q.index);
+                if (!wrongSet[k]) { wrongSet[k] = { ...q };
+                    saveWrong(); }
+            }
+
+            function removeWrong(k) { if (wrongSet[k]) { delete wrongSet[k];
+                    saveWrong(); } }
+
+            // ============ 上传 ============
+            function renderUpload() {
+                const has = questionBank && (questionBank.single.length + questionBank.multi.length + questionBank.judge
+                    .length > 0);
+                let st = '';
+                if (has) st = `<div class="stat-grid"><div class="stat-card"><div class="stat-value">${questionBank.single.length}</div><div class="stat-label">单选题</div></div><div class="stat-card"><div class="stat-value">${questionBank.multi.length}</div><div class="stat-label">多选题</div></div><div class="stat-card"><div class="stat-value">${questionBank.judge.length}</div><div class="stat-label">判断题</div></div></div>`;
+                appMain.innerHTML = `<div class="card"><div class="card-title"><span class="dot"></span>上传题库</div><div class="upload-zone" id="upZone"><div class="icon-big">📂</div><p class="fw-600">点击或拖拽上传Excel题库</p><input type="file" id="fileInp" accept=".xlsx,.xls"></div><div class="text-center mt-8" id="upStat"></div></div><div class="card">${st}</div>`;
+                const f = document.getElementById('fileInp');
+                document.getElementById('upZone').addEventListener('click', () => f.click());
+                f.addEventListener('change', () => { if (f.files[0]) handleFile(f.files[0]); });
+            }
+
+            function handleFile(file) {
+                const st = document.getElementById('upStat');
+                if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) { st.innerHTML =
+                        '<span style="color:#d93025;">❌ 请上传 .xlsx/.xls 文件</span>'; return; }
+                st.innerHTML = '<span style="color:#1a73e8;">⏳ 解析中...</span>';
+                const r = new FileReader();
+                r.onload = function(e) {
+                    try {
+                        const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                        const bank = parseBank(wb);
+                        const t = bank.single.length + bank.multi.length + bank.judge.length;
+                        if (!t) { st.innerHTML = '<span style="color:#d93025;">❌ 未解析到题目</span>'; return; }
+                        questionBank = bank;
+                        localStorage.setItem(STORAGE_KEY_BANK, JSON.stringify(bank));
+                        wrongSet = {};
+                        saveWrong();
+                        practiceIndex = { single: 0, multi: 0, judge: 0 };
+                        savePracticeIndex();
+                        st.innerHTML =
+                            `<span style="color:#0d904f;">✅ 成功！单选${bank.single.length} 多选${bank.multi.length} 判断${bank.judge.length}，共${t}题</span>`;
+                        renderUpload();
+                    } catch (err) { st.innerHTML = '<span style="color:#d93025;">❌ 解析失败</span>'; }
+                };
+                r.readAsArrayBuffer(file);
+            }
+
+            // ============ 练习（计数器版） ============
+            function renderPractice() {
+                if (!questionBank || !(questionBank.single.length + questionBank.multi.length + questionBank.judge
+                        .length)) {
+                    appMain.innerHTML =
+                        '<div class="card text-center"><p class="text-muted">📭 请先上传题库</p><button class="btn btn-primary" onclick="switchTab(\'upload\')">去上传</button></div>';
+                    return;
+                }
+                const info = [
+                    { key: 'single', label: '单选题', count: questionBank.single.length },
+                    { key: 'multi', label: '多选题', count: questionBank.multi.length },
+                    { key: 'judge', label: '判断题', count: questionBank.judge.length },
+                ];
+                appMain.innerHTML = `
+          <div class="card">
+            <div class="card-title"><span class="dot"></span>选择题型</div>
+            <div class="stat-grid">
+              ${info.map(i => `<div class="stat-card" data-pt="${i.key}"><div class="stat-value">${i.count}</div><div class="stat-label">${i.label}</div><div class="text-sm text-muted">上次进度：第${practiceIndex[i.key]+1}题</div></div>`).join('')}
+            </div>
+            <p class="text-sm text-muted text-center">点击卡片选择题型，开始练习将从上次位置继续。</p>
+            <div class="btn-group mt-8" style="justify-content:center;">
+              <button class="btn btn-outline btn-sm" id="resetIdxBtn">🔄 重置所有进度</button>
+            </div>
+          </div>`;
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const pt = card.dataset.pt;
+                        startPractice(pt);
+                    });
+                });
+                document.getElementById('resetIdxBtn').addEventListener('click', () => {
+                    if (confirm('确定将所有题型的进度重置到第1题吗？')) {
+                        practiceIndex = { single: 0, multi: 0, judge: 0 };
+                        savePracticeIndex();
+                        renderPractice();
+                        showToast('进度已重置');
+                    }
+                });
+            }
+
+            function startPractice(ptype) {
+                const questions = questionBank[ptype] || [];
+                if (!questions.length) { showToast('该题型暂无题目'); return; }
+                const startIdx = Math.min(practiceIndex[ptype], questions.length - 1);
+                practiceState = {
+                    ptype: ptype,
+                    questions: [...questions],
+                    currentIndex: startIdx,
+                    answered: false,
+                    userAnswer: null,
+                };
+                renderPracQ();
+            }
+
+            function renderPracQ() {
+                const ps = practiceState;
+                if (ps.currentIndex >= ps.questions.length) {
+                    // 完成练习，更新计数器
+                    practiceIndex[ps.ptype] = ps.questions.length;
+                    savePracticeIndex();
+                    practiceState = null;
+                    appMain.innerHTML =
+                        `<div class="card text-center"><div class="result-score">🎉</div><p>本题型已全部完成！</p><button class="btn btn-primary mt-16" id="backPrac">返回题型选择</button></div>`;
+                    document.getElementById('backPrac').addEventListener('click', () => renderPractice());
+                    return;
+                }
+                const q = ps.questions[ps.currentIndex];
+                const total = ps.questions.length;
+                const isM = q.type === 'multi',
+                    isJ = q.type === 'judge',
+                    keys = Object.keys(q.options).sort();
+                let optHTML = '';
+                if (isJ) optHTML = `
+            <div class="option-item${ps.answered&&ps.userAnswer==='√'?(q.answer==='√'?' correct':' wrong'):''}${ps.answered&&q.answer==='√'?' show-correct':''}" data-val="√"${ps.answered?' style="pointer-events:none"':''}><span class="option-letter">✓</span> 正确</div>
+            <div class="option-item${ps.answered&&ps.userAnswer==='×'?(q.answer==='×'?' correct':' wrong'):''}${ps.answered&&q.answer==='×'?' show-correct':''}" data-val="×"${ps.answered?' style="pointer-events:none"':''}><span class="option-letter">✗</span> 错误</div>`;
+                else if (isM) optHTML = keys.map(k => {
+                    let c = '';
+                    if (ps.answered) { const u = Array.isArray(ps.userAnswer) && ps.userAnswer.includes(k),
+                            a = q.answer.includes(k); if (u && a) c = 'correct';
+                        else if (u && !a) c = 'wrong';
+                        else if (!u && a) c = 'show-correct'; } else if (Array.isArray(ps.userAnswer) && ps
+                        .userAnswer.includes(k)) c = 'selected';
+                    return `<div class="option-item${c?' '+c:''}" data-val="${k}"${ps.answered?' style="pointer-events:none"':''}><span class="option-checkbox"></span><b>${k}.</b> ${q.options[k]}</div>`;
+                }).join('');
+                else optHTML = keys.map(k => {
+                    let c = '';
+                    if (ps.answered) { if (ps.userAnswer === k && k === q.answer) c = 'correct';
+                        else if (ps.userAnswer === k) c = 'wrong';
+                        else if (k === q.answer) c = 'show-correct'; } else if (ps.userAnswer === k) c =
+                        'selected';
+                    return `<div class="option-item${c?' '+c:''}" data-val="${k}"${ps.answered?' style="pointer-events:none"':''}><span class="option-letter">${k}</span> ${q.options[k]}</div>`;
+                }).join('');
+                let fb = '';
+                if (ps.answered) {
+                    const ok = isM ? (Array.isArray(ps.userAnswer) && ps.userAnswer.sort().join('') === q.answer) : (ps
+                        .userAnswer === q.answer);
+                    fb =
+                        `<div class="feedback-bar${ok?' correct-fb':' wrong-fb'}">${ok?'✅ 正确':'❌ 错误！正确答案：'+(isM?q.answer.split('').join('、'):q.answer)}</div>`;
+                }
+                appMain.innerHTML = `
+          <div class="card">
+            <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(ps.currentIndex/total*100)}%;"></div></div>
+            <div class="text-sm text-muted text-right">${ps.currentIndex+1}/${total}</div>
+            <div class="question-number">📌 第${q.index}题 · ${isM?'多选':isJ?'判断':'单选'}</div>
+            <div class="question-text">${q.question.replace(/<br\s*\/?>/gi,'<br>')}</div>
+            <div class="options-list" id="pOpts">${optHTML}</div>
+            ${fb}
+            <div class="btn-group mt-16" style="justify-content:space-between;">
+              <button class="btn btn-outline btn-sm" id="prevBtn"${ps.currentIndex===0?' disabled':''}>⬅ 上一题</button>
+              ${ps.answered?'<button class="btn btn-primary" id="nextBtn">下一题 ➡</button>':'<button class="btn btn-primary" id="subBtn">提交答案</button>'}
+            </div>
+            <div class="text-center mt-8">
+              <button class="btn btn-outline btn-sm" id="backBtn2">🔙 返回题型选择（保存进度）</button>
+            </div>
+          </div>`;
+                if (!ps.answered) {
+                    const oc = document.getElementById('pOpts');
+                    oc.addEventListener('click', e => {
+                        const it = e.target.closest('.option-item');
+                        if (!it || ps.answered) return;
+                        const v = it.dataset.val;
+                        if (isM) {
+                            if (!Array.isArray(ps.userAnswer)) ps.userAnswer = [];
+                            const idx = ps.userAnswer.indexOf(v);
+                            if (idx >= 0) ps.userAnswer.splice(idx, 1);
+                            else ps.userAnswer.push(v);
+                            oc.querySelectorAll('.option-item').forEach(el => { if (ps.userAnswer.includes(el
+                                    .dataset.val)) el.classList.add('selected');
+                                else el.classList.remove('selected'); });
+                        } else { ps.userAnswer = v;
+                            oc.querySelectorAll('.option-item').forEach(el => el.classList.remove(
+                                'selected'));
+                            it.classList.add('selected'); }
+                    });
+                }
+                document.getElementById('prevBtn')?.addEventListener('click', () => { if (ps.currentIndex > 0) { ps
+                        .currentIndex--;
+                        ps.answered = false;
+                        ps.userAnswer = isM ? [] : null;
+                        renderPracQ(); } });
+                document.getElementById('subBtn')?.addEventListener('click', () => {
+                    if (isM && (!Array.isArray(ps.userAnswer) || !ps.userAnswer.length)) { showToast('请选择'); return; }
+                    if (!isM && !ps.userAnswer) { showToast('请选择'); return; }
+                    ps.answered = true;
+                    const ok = isM ? (Array.isArray(ps.userAnswer) && ps.userAnswer.sort().join('') === q.answer) :
+                        (ps.userAnswer === q.answer);
+                    if (!ok) addWrong(q);
+                    renderPracQ();
+                });
+                document.getElementById('nextBtn')?.addEventListener('click', () => {
+                    ps.currentIndex++;
+                    ps.answered = false;
+                    ps.userAnswer = isM ? [] : null;
+                    // 更新计数器
+                    practiceIndex[ps.ptype] = ps.currentIndex;
+                    savePracticeIndex();
+                    renderPracQ();
+                });
+                document.getElementById('backBtn2')?.addEventListener('click', () => {
+                    // 保存当前进度到计数器
+                    practiceIndex[ps.ptype] = ps.currentIndex;
+                    savePracticeIndex();
+                    practiceState = null;
+                    renderPractice();
+                });
+            }
+
+            // ============ 随机测试（历史成绩保留） ============
+            function renderTest() {
+                if (!questionBank || !(questionBank.single.length + questionBank.multi.length + questionBank.judge
+                        .length)) {
+                    appMain.innerHTML =
+                        '<div class="card text-center"><p class="text-muted">📭 请先上传题库</p><button class="btn btn-primary" onclick="switchTab(\'upload\')">去上传</button></div>';
+                    return;
+                }
+                if (testState && testState.active && !testState.submitted) { renderTestQ(); return; }
+                const sc = Math.min(TEST_SINGLE, questionBank.single.length),
+                    mc = Math.min(TEST_MULTI, questionBank.multi.length),
+                    jc = Math.min(TEST_JUDGE, questionBank.judge.length);
+                let histHTML = '';
+                const hist = getHistory();
+                if (hist.length) {
+                    histHTML = '<div class="card"><div class="card-title"><span class="dot"></span>历史成绩</div>';
+                    hist.forEach((h, i) => {
+                        const d = new Date(h.timestamp);
+                        histHTML +=
+                            `<div class="history-item" data-hi="${i}">📅 ${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')} · 得分 ${h.score}% (${h.correctCount}/${h.total})</div>`;
+                    });
+                    histHTML += '</div>';
+                }
+                appMain.innerHTML = `
+          <div class="card text-center">
+            <div class="card-title"><span class="dot"></span>随机测试</div>
+            <div class="stat-grid">
+              <div class="stat-card"><div class="stat-value">${sc}</div><div class="stat-label">单选</div></div>
+              <div class="stat-card"><div class="stat-value">${mc}</div><div class="stat-label">多选</div></div>
+              <div class="stat-card"><div class="stat-value">${jc}</div><div class="stat-label">判断</div></div>
+              <div class="stat-card"><div class="stat-value green">${sc+mc+jc}</div><div class="stat-label">总计</div></div>
+            </div>
+            <button class="btn btn-primary btn-lg" id="startTest">开始测试</button>
+          </div>
+          ${histHTML}`;
+                document.getElementById('startTest').addEventListener('click', () => {
+                    testState = {
+                        active: true,
+                        questions: shuffle([...shuffle(questionBank.single).slice(0, TEST_SINGLE), ...shuffle(
+                            questionBank.multi).slice(0, TEST_MULTI), ...shuffle(questionBank.judge).slice(
+                            0, TEST_JUDGE)]),
+                        currentIndex: 0,
+                        answers: {},
+                        submitted: false,
+                        timestamp: Date.now(),
+                    };
+                    renderTestQ();
+                });
+                document.querySelectorAll('.history-item').forEach(el => el.addEventListener('click', () => {
+                    const r = hist[parseInt(el.dataset.hi)];
+                    if (r) showHistDetail(r);
+                }));
+            }
+
+            function renderTestQ() {
+                const ts = testState;
+                if (ts.submitted || ts.currentIndex >= ts.questions.length) { ts.submitted = true;
+                    testResult(); return; }
+                const q = ts.questions[ts.currentIndex],
+                    total = ts.questions.length, isM = q.type === 'multi',
+                    isJ = q.type === 'judge', keys = Object.keys(q.options).sort(),
+                    ua = ts.answers[ts.currentIndex];
+                let optHTML = '';
+                if (isJ) optHTML =
+                    `<div class="option-item${ua==='√'?' selected':''}" data-val="√"><span class="option-letter">✓</span> 正确</div><div class="option-item${ua==='×'?' selected':''}" data-val="×"><span class="option-letter">✗</span> 错误</div>`;
+                else if (isM) optHTML = keys.map(k =>
+                    `<div class="option-item${Array.isArray(ua)&&ua.includes(k)?' selected':''}" data-val="${k}"><span class="option-checkbox"></span><b>${k}.</b> ${q.options[k]}</div>`
+                    ).join('');
+                else optHTML = keys.map(k =>
+                    `<div class="option-item${ua===k?' selected':''}" data-val="${k}"><span class="option-letter">${k}</span> ${q.options[k]}</div>`
+                    ).join('');
+                appMain.innerHTML = `
+          <div class="card">
+            <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(ts.currentIndex/total*100)}%;"></div></div>
+            <div class="text-sm text-muted text-right">${ts.currentIndex+1}/${total}</div>
+            <div class="question-number">📌 第${ts.currentIndex+1}题 · ${isM?'多选':isJ?'判断':'单选'}</div>
+            <div class="question-text">${q.question.replace(/<br\s*\/?>/gi,'<br>')}</div>
+            <div class="options-list" id="tOpts">${optHTML}</div>
+            <div class="btn-group mt-16" style="justify-content:space-between;">
+              <button class="btn btn-outline btn-sm" id="tPrev"${ts.currentIndex===0?' disabled':''}>⬅ 上一题</button>
+              <span class="text-sm text-muted">${Object.keys(ts.answers).length}/${total} 已答</span>
+              ${ts.currentIndex<total-1?'<button class="btn btn-primary" id="tNext">下一题 ➡</button>':'<button class="btn btn-success" id="tSub">✅ 提交</button>'}
+            </div>
+            <div class="text-center mt-8"><button class="btn btn-outline btn-sm" id="tJump">📋 查看所有题目</button></div>
+          </div>`;
+                const oc = document.getElementById('tOpts');
+                oc.addEventListener('click', e => {
+                    const it = e.target.closest('.option-item');
+                    if (!it) return;
+                    const v = it.dataset.val;
+                    if (isM) { let arr = Array.isArray(ts.answers[ts.currentIndex]) ? [...ts.answers[ts
+                            .currentIndex]] : []; const idx = arr.indexOf(v); if (idx >= 0) arr.splice(idx,
+                            1);
+                        else arr.push(v);
+                        ts.answers[ts.currentIndex] = arr;
+                        oc.querySelectorAll('.option-item').forEach(el => { if (arr.includes(el.dataset.val)) el
+                                .classList.add('selected');
+                            else el.classList.remove('selected'); }); } else { ts.answers[ts.currentIndex] =
+                        v;
+                        oc.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+                        it.classList.add('selected'); }
+                });
+                document.getElementById('tPrev')?.addEventListener('click', () => { if (ts.currentIndex > 0) { ts
+                        .currentIndex--;
+                        renderTestQ(); } });
+                document.getElementById('tNext')?.addEventListener('click', () => { if (ts.currentIndex < total - 1) { ts
+                        .currentIndex++;
+                        renderTestQ(); } });
+                document.getElementById('tSub')?.addEventListener('click', () => { if (confirm('提交后不可修改，确定？')) { ts
+                        .submitted = true;
+                        ts.currentIndex = 0;
+                        testResult(); } });
+                document.getElementById('tJump')?.addEventListener('click', () => {
+                    modalContainer.innerHTML = `
+            <div class="modal-overlay" id="ov"><div class="modal">
+              <button class="modal-close" id="clOv">✕</button>
+              <h3>答题进度</h3>
+              <div style="text-align:center">${ts.questions.map((_,i)=>`<span style="display:inline-block;width:36px;height:36px;line-height:36px;margin:3px;border-radius:6px;cursor:pointer;font-weight:600;${ts.answers[i]!==undefined?'background:#e8f0fe;color:#1a73e8;':'background:#f5f5f5;color:#999;'}border:1px solid ${ts.answers[i]!==undefined?'#1a73e8':'#e0e0e0'};" data-ji="${i}">${i+1}</span>`).join('')}</div>
+            </div></div>`;
+                    document.getElementById('clOv').addEventListener('click', () => modalContainer.innerHTML = '');
+                    document.getElementById('ov').addEventListener('click', function(e) { if (e.target === this)
+                            modalContainer.innerHTML = ''; else { const s = e.target.closest('[data-ji]'); if (
+                                s) { ts.currentIndex = parseInt(s.dataset.ji);
+                                modalContainer.innerHTML = '';
+                                renderTestQ(); } } });
+                });
+            }
+
+            function testResult() {
+                const ts = testState;
+                let corr = 0;
+                const det = ts.questions.map((q, i) => {
+                    const ua = ts.answers[i];
+                    let ok = false;
+                    if (q.type === 'multi') ok = (Array.isArray(ua) ? ua.sort().join('') : '') === q.answer;
+                    else ok = ua === q.answer;
+                    if (ok) corr++;
+                    else addWrong(q);
+                    return { q, ua, ok };
+                });
+                const score = Math.round((corr / ts.questions.length) * 100);
+                saveHistory({ timestamp: ts.timestamp, score, total: ts.questions.length, correctCount: corr, details: det
+                        .map(d => ({ q: d.q, userAnswer: d.ua, isCorrect: d.ok })) });
+                saveWrong();
+                testState = { ...ts, _det: det, _score: score, submitted: true };
+                const sd = det.filter(d => d.q.type === 'single'),
+                    md = det.filter(d => d.q.type === 'multi'),
+                    jd = det.filter(d => d.q.type === 'judge');
+                appMain.innerHTML = `
+          <div class="card text-center">
+            <div class="result-score">${score}</div>
+            <div class="result-grade">${score>=90?'🏆 优秀':score>=75?'👍 良好':score>=60?'📚 及格':'💪 需努力'}</div>
+            <p class="text-muted mt-8">正确 <b>${corr}</b>/${ts.questions.length}</p>
+            <div class="stat-grid mt-16">
+              <div class="stat-card"><div class="stat-value">${sd.filter(d=>d.ok).length}/${sd.length}</div><div class="stat-label">单选</div></div>
+              <div class="stat-card"><div class="stat-value">${md.filter(d=>d.ok).length}/${md.length}</div><div class="stat-label">多选</div></div>
+              <div class="stat-card"><div class="stat-value">${jd.filter(d=>d.ok).length}/${jd.length}</div><div class="stat-label">判断</div></div>
+            </div>
+            <div class="btn-group mt-16" style="justify-content:center;">
+              <button class="btn btn-primary" id="reTest">重新测试</button>
+              <button class="btn btn-outline" id="revTest">查看详情</button>
+            </div>
+          </div>`;
+                document.getElementById('reTest').addEventListener('click', () => { testState = null;
+                    renderTest(); });
+                document.getElementById('revTest').addEventListener('click', () => showTestReview());
+            }
+
+            function showTestReview() {
+                const det = testState._det;
+                const html = det.map((d, i) => {
+                    const q = d.q,
+                        tl = q.type === 'single' ? '单选' : q.type === 'multi' ? '多选' : '判断',
+                        icon = d.ok ? '✅' : '❌',
+                        ca = q.type === 'multi' ? q.answer.split('').join('、') : q.answer,
+                        ua = q.type === 'multi' ? (Array.isArray(d.ua) ? d.ua.sort().join('、') : '未答') : (d.ua ||
+                            '未答');
+                    return `<div style="padding:8px;margin:4px 0;border-radius:6px;background:${d.ok?'#e6f4ea':'#fce8e6'};font-size:0.85rem;">${icon} <b>第${i+1}题</b> [${tl}] 正确答案：${ca} | 你的答案：${ua}<br>${q.question.replace(/<br>/g,' ')}</div>`;
+                }).join('');
+                modalContainer.innerHTML =
+                    `<div class="modal-overlay" id="rvOv"><div class="modal"><button class="modal-close" id="clRv">✕</button><h3>测试详情 (得分: ${testState._score})</h3><div style="max-height:60vh;overflow-y:auto;">${html}</div></div></div>`;
+                document.getElementById('clRv').addEventListener('click', () => modalContainer.innerHTML = '');
+                document.getElementById('rvOv').addEventListener('click', function(e) { if (e.target === this)
+                        modalContainer.innerHTML = ''; });
+            }
+
+            function getHistory() { try { const r = localStorage.getItem(STORAGE_KEY_TEST_HISTORY); return r ? JSON.parse(r) :
+                    []; } catch (e) { return []; } }
+
+            function saveHistory(rec) {
+                try {
+                    let h = getHistory();
+                    h.unshift(rec);
+                    if (h.length > 20) h = h.slice(0, 20);
+                    localStorage.setItem(STORAGE_KEY_TEST_HISTORY, JSON.stringify(h));
+                } catch (e) {}
+            }
+
+            function showHistDetail(rec) {
+                const html = rec.details.map((d, i) => {
+                    const q = d.q,
+                        tl = q.type === 'single' ? '单选' : q.type === 'multi' ? '多选' : '判断',
+                        icon = d.isCorrect ? '✅' : '❌',
+                        ca = q.type === 'multi' ? q.answer.split('').join('、') : q.answer,
+                        ua = q.type === 'multi' ? (Array.isArray(d.userAnswer) ? d.userAnswer.sort().join('、') :
+                            '未答') : (d.userAnswer || '未答');
+                    return `<div style="padding:8px;margin:4px 0;border-radius:6px;background:${d.isCorrect?'#e6f4ea':'#fce8e6'};font-size:0.85rem;">${icon} <b>第${i+1}题</b> [${tl}] 正确答案：${ca} | 你的答案：${ua}<br>${q.question.replace(/<br>/g,' ')}</div>`;
+                }).join('');
+                modalContainer.innerHTML =
+                    `<div class="modal-overlay" id="hiOv"><div class="modal"><button class="modal-close" id="clHi">✕</button><h3>历史测试 (得分: ${rec.score}%)</h3><div style="max-height:60vh;overflow-y:auto;">${html}</div></div></div>`;
+                document.getElementById('clHi').addEventListener('click', () => modalContainer.innerHTML = '');
+                document.getElementById('hiOv').addEventListener('click', function(e) { if (e.target === this)
+                        modalContainer.innerHTML = ''; });
+            }
+
+            // ============ 错题集（按题型分类） ============
+            function renderWrong() {
+                const keys = Object.keys(wrongSet);
+                if (!keys.length) { appMain.innerHTML =
+                        '<div class="card text-center"><p class="text-muted">🎉 暂无错题</p></div>'; return; }
+                const sK = keys.filter(k => wrongSet[k].type === 'single'),
+                    mK = keys.filter(k => wrongSet[k].type === 'multi'),
+                    jK = keys.filter(k => wrongSet[k].type === 'judge');
+                appMain.innerHTML = `
+          <div class="card">
+            <div class="card-title"><span class="dot"></span>错题集 (${keys.length}题)</div>
+            <div class="stat-grid">
+              <div class="stat-card" id="sW"><div class="stat-value red">${sK.length}</div><div class="stat-label">单选错题</div></div>
+              <div class="stat-card" id="mW"><div class="stat-value red">${mK.length}</div><div class="stat-label">多选错题</div></div>
+              <div class="stat-card" id="jW"><div class="stat-value red">${jK.length}</div><div class="stat-label">判断错题</div></div>
+            </div>
+            <div class="text-center"><button class="btn btn-danger btn-sm" id="clrW">🗑 清空错题集</button></div>
+          </div>`;
+                document.getElementById('sW').addEventListener('click', () => showWList('single', sK));
+                document.getElementById('mW').addEventListener('click', () => showWList('multi', mK));
+                document.getElementById('jW').addEventListener('click', () => showWList('judge', jK));
+                document.getElementById('clrW').addEventListener('click', () => { if (confirm('确定清空？')) { wrongSet = {};
+                        saveWrong();
+                        renderWrong(); } });
+            }
+
+            function showWList(type, keys) {
+                const items = keys.map(k => wrongSet[k]);
+                const lb = type === 'single' ? '单选' : type === 'multi' ? '多选' : '判断';
+                appMain.innerHTML = `
+          <div class="card">
+            <div class="card-title"><span class="dot"></span>${lb}错题 (${items.length})</div>
+            ${items.map(q=>`<div class="wrong-list-item" data-key="${getKey(q.type,q.index)}"><span class="tag-${type}">${lb}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${q.question.replace(/<br>/g,' ')}</span><span style="color:#999;">题号${q.index}</span></div>`).join('')}
+            <div class="text-center mt-8"><button class="btn btn-outline btn-sm" id="backW">🔙 返回错题集</button></div>
+          </div>`;
+                document.querySelectorAll('.wrong-list-item').forEach(el => el.addEventListener('click', () => {
+                    const q = wrongSet[el.dataset.key];
+                    if (q) showWQModal(q, el.dataset.key);
+                }));
+                document.getElementById('backW').addEventListener('click', () => renderWrong());
+            }
+
+            function showWQModal(q, key) {
+                const isM = q.type === 'multi',
+                    isJ = q.type === 'judge',
+                    keys = Object.keys(q.options).sort();
+                let optHTML = '';
+                if (isJ) optHTML =
+                    '<div class="option-item" data-val="√"><span class="option-letter">✓</span> 正确</div><div class="option-item" data-val="×"><span class="option-letter">✗</span> 错误</div>';
+                else if (isM) optHTML = keys.map(k =>
+                    `<div class="option-item" data-val="${k}"><span class="option-checkbox"></span><b>${k}.</b> ${q.options[k]}</div>`
+                    ).join('');
+                else optHTML = keys.map(k =>
+                    `<div class="option-item" data-val="${k}"><span class="option-letter">${k}</span> ${q.options[k]}</div>`
+                    ).join('');
+                modalContainer.innerHTML = `
+          <div class="modal-overlay" id="wqOv"><div class="modal">
+            <button class="modal-close" id="clWq">✕</button>
+            <h3>错题重练</h3>
+            <div class="question-number">📌 ${isM?'多选':isJ?'判断':'单选'} · 题号${q.index}</div>
+            <div class="question-text">${q.question.replace(/<br>/g,'<br>')}</div>
+            <div class="options-list" id="wqOpts">${optHTML}</div>
+            <div id="wqFb" class="mt-8"></div>
+            <div class="btn-group mt-16" style="justify-content:center;">
+              <button class="btn btn-primary" id="wqSub">提交</button>
+              <button class="btn btn-outline btn-sm" id="wqRem">移除</button>
+            </div>
+          </div></div>`;
+                let ua = isM ? [] : null;
+                const oc = document.getElementById('wqOpts');
+                oc.addEventListener('click', e => {
+                    const it = e.target.closest('.option-item');
+                    if (!it || document.getElementById('wqFb').dataset.ans === '1') return;
+                    const v = it.dataset.val;
+                    if (isM) { const idx = ua.indexOf(v); if (idx >= 0) ua.splice(idx, 1);
+                        else ua.push(v);
+                        oc.querySelectorAll('.option-item').forEach(el => { if (ua.includes(el.dataset.val)) el
+                                .classList.add('selected');
+                            else el.classList.remove('selected'); }); } else { ua = v;
+                        oc.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+                        it.classList.add('selected'); }
+                });
+                document.getElementById('clWq').addEventListener('click', () => modalContainer.innerHTML = '');
+                document.getElementById('wqRem').addEventListener('click', () => { removeWrong(key);
+                    modalContainer.innerHTML = '';
+                    renderWrong();
+                    showToast('已移除'); });
+                document.getElementById('wqSub').addEventListener('click', () => {
+                    if (isM && !ua.length) { showToast('请选择'); return; }
+                    if (!isM && !ua) { showToast('请选择'); return; }
+                    const ok = isM ? (ua.sort().join('') === q.answer) : (ua === q.answer);
+                    const fb = document.getElementById('wqFb');
+                    fb.dataset.ans = '1';
+                    if (ok) { fb.innerHTML =
+                            '<div class="feedback-bar correct-fb">✅ 正确！已移除</div>';
+                        removeWrong(key);
+                        setTimeout(() => { modalContainer.innerHTML = '';
+                            renderWrong(); }, 1200); } else { fb.innerHTML =
+                            `<div class="feedback-bar wrong-fb">❌ 错误！答案：${isM?q.answer.split('').join('、'):q.answer}</div>`;
+                        oc.querySelectorAll('.option-item').forEach(el => { el.style.pointerEvents = 'none'; if (
+                                isM) { if (q.answer.includes(el.dataset.val)) el.classList.add(
+                                    'show-correct'); if (ua.includes(el.dataset.val) && !q.answer.includes(
+                                    el.dataset.val)) el.classList.add('wrong'); } else { if (el.dataset
+                                    .val === q.answer) el.classList.add('show-correct'); if (el.dataset
+                                    .val === ua && ua !== q.answer) el.classList.add('wrong'); } });
+                        document.getElementById('wqSub').disabled = true; }
+                });
+            }
+
+            init();
+            window.switchTab = switchTab;
+        })();
+    </script>
+</body>
+</html>
